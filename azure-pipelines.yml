@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: Maverickspool
+  vmImage: ubuntu-latest
 
 steps:
 - script: echo Hello, world!
