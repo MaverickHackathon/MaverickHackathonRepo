@@ -14,9 +14,16 @@ steps:
     inputs:
       versionSpec: '24.3.0'
     displayName: 'Install Node.js'
+ 
+  - script: npm install -g npm@10
+    displayName: 'Downgrade npm to v10'
+
+  - script: node -v
+    displayName: 'Show Node.js version'
+  - script: npm -v
+    displayName: 'Show npm version'
 
   - script: |
-      npm install -g npm@latest
       npm ci
       npx playwright install --with-deps
     displayName: 'Install dependencies and Playwright browsers'
