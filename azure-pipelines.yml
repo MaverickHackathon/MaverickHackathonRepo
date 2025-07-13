@@ -5,13 +5,37 @@
 
 
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
 
 steps:
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install -g npm@latest
+      npm ci
+      npx playwright install --with-deps
+    displayName: 'Install dependencies and Playwright browsers'
+
+  - script: |
+      $datetime = Get-Date -Format "yyyyMMdd-HHmmss"
+      $filename = "test-results/results-$(Build.BuildNumber)-$datetime.xml"
+      npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results
+      Rename-Item -Path "test-results/results.xml" -NewName $filename
+    displayName: 'Run Playwright tests and save JUnit report with build number and datetime'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: 'test-results/*.xml'
+      testResultsFormat: 'JUnit'
+      failTaskOnFailedTests: true
+    displayName: 'Publish Playwright Test Results'
+
+  - publish: test-results
+    artifact: test-results
+    displayName: 'Publish Test Results Artifact'
