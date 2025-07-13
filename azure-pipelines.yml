@@ -15,8 +15,8 @@ steps:
       versionSpec: '24.3.0'
     displayName: 'Install Node.js'
  
-  - script: npm install -g npm@10
-    displayName: 'Downgrade npm to v10'
+  #- script: npm install -g npm@10
+   # displayName: 'Downgrade npm to v10'
   
   - script: npm cache clean --force
     displayName: 'Clean npm cache'
