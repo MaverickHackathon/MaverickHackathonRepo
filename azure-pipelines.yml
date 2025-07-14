@@ -40,8 +40,9 @@ steps:
       npm install -g playwright
     displayName: 'Install Playwright'
 
+#tests/saucedemologin.spec.js --reporter=junit --output=test-results
   - script: |
-      npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results      
+      npx playwright test
     displayName: 'Run Playwright tests and save JUnit report with build number and datetime'
 
   - task: PublishTestResults@2
