@@ -41,7 +41,6 @@ steps:
       npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results
       Rename-Item -Path "test-results/results.xml" -NewName $filename
     displayName: 'Run Playwright tests and save JUnit report with build number and datetime'
-    shell: pwsh
 
   - task: PublishTestResults@2
     inputs:
