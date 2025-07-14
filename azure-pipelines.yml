@@ -48,7 +48,7 @@ steps:
    #   npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results
     #displayName: 'Run Playwright tests and save JUnit report with build number and datetime'
   - script : |
-      npm run tests: tests/saucedemologin.spec
+      npx playwright test --output=test-results
     displayName: 'Run Playwright tests'
 
   - task: PublishTestResults@2
