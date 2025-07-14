@@ -37,7 +37,7 @@ steps:
     displayName: 'Update npm to latest version'
     
   - script: |
-      npx playwright install
+      npm install -g playwright
     displayName: 'Install Playwright'
 
   - script: |
