@@ -33,7 +33,7 @@ steps:
  # - script: npm ci --install-strategy=hoisted
   #  displayName: 'Install dependencies'
 
-    - script: npm install -g npm@latest
+  - script: npm install -g npm@latest
     displayName: 'Update npm to latest version'
     
   - script: |
