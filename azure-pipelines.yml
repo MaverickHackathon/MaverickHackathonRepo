@@ -41,15 +41,12 @@ steps:
     displayName: 'Install Playwright'
 
   - script: |
-      $datetime = Get-Date -Format "yyyyMMdd-HHmmss"
-      $filename = "test-results/results-$(Build.BuildNumber)-$datetime.xml"
-      npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results
-      Rename-Item -Path "test-results/results.xml" -NewName $filename
+      npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results      
     displayName: 'Run Playwright tests and save JUnit report with build number and datetime'
 
   - task: PublishTestResults@2
     inputs:
-      testResultsFiles: 'test-results/*.xml'
+      testResultsFiles: 'test-results-$(Build.BuildNumber)/*.xml'
       testResultsFormat: 'JUnit'
       failTaskOnFailedTests: true
     displayName: 'Publish Playwright Test Results'
