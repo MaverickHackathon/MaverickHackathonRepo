@@ -20,7 +20,8 @@ steps:
       npm -v
     displayName: 'Show Node.js and npm versions'
   
-  - script: npm cache clean --force
+  - script: |
+      npm cache clean --force
     displayName: 'Clean npm cache'
 
   - script: |
