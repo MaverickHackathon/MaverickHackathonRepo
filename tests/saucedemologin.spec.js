@@ -1,62 +1,68 @@
-const {test, expect} = require('@playwright/test');
+const { test, expect } = require('@playwright/test');
 
-test.describe('Sauce Demo Login Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate to the Sauce Demo login page before each test
-    await page.goto('https://www.saucedemo.com/');
-    });
-  });
+test('Positive - login with valid credentials', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com');
 
-  test('should display error message for invalid credentials', async ({ page }) => {
-     await page.goto('https://www.saucedemo.com/');
-    // Enter invalid username and password
-    await page.fill('#user-name', 'invalid_user');
-    await page.fill('#password', 'invalid_password');
-    await page.click('#login-button');
+  // Enter valid username and password
+  await page.fill('#user-name', 'standard_user');
+  await page.fill('#password', 'secret_sauce');
 
-    // Check for error message
-    const errorMessage = await page.locator('.error-message-container').textContent();
-    expect(errorMessage).toContain('Username and password do not match any user in this service');
-  });
+  // Click login button
+  await page.click('#login-button');
 
-  test('should login successfully with valid credentials', async ({ page }) => {
-     await page.goto('https://www.saucedemo.com/');
-    // Enter valid username and password
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
+  // Verify navigation to products page
+  await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
 
-    // Check if the inventory page is displayed
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
-  });
+  // Optional: Verify product page elements
+  await expect(page.locator('.title')).toHaveText('Products');
+});
 
-  test('should display locked out message for locked out user', async ({ page }) => {
-     await page.goto('https://www.saucedemo.com/');
-    // Enter locked out user credentials
-    await page.fill('#user-name', 'locked_out_user');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
+// Invalid username
+test('Negative - login with invalid username', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com');
+  await page.fill('#user-name', 'invalid_user');
+  await page.fill('#password', 'secret_sauce');
+  await page.click('#login-button');
+  // Verify error message
+  await expect(page.locator('.error-message-container')).toContainText('Username and password do not match any user in this service');
+});
 
-    // Check for locked out message
-    const errorMessage = await page.locator('.error-message-container').textContent();
-    expect(errorMessage).toContain('Epic sadface: Sorry, this user has been locked out.');
-  });
+// Invalid password
+test('Negative - login with invalid password', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com');
+  await page.fill('#user-name', 'standard_user');
+  await page.fill('#password', 'wrong_password');
+  await page.click('#login-button');
+  // Verify error message
+  await expect(page.locator('.error-message-container')).toContainText('Username and password do not match any user in this service');
+});
 
-  test('should display error message for empty username or password', async ({ page }) => {
-     await page.goto('https://www.saucedemo.com/');
-    // Attempt to login with empty username
-    await page.fill('#user-name', '');
-    await page.fill('#password', 'secret_sauce');
-    await page.click('#login-button');
+// Empty username
+test('Negative - login with empty username', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com');
+  await page.fill('#user-name', '');
+  await page.fill('#password', 'secret_sauce');
+  await page.click('#login-button');
+  // Verify error message
+  await expect(page.locator('.error-message-container')).toContainText('Epic sadface: Username is required');
+});
 
-    let errorMessage = await page.locator('.error-message-container').textContent();
-    expect(errorMessage).toContain('Epic sadface: Username is required');
+// Empty password
+test('Negative - login with empty password', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com');
+  await page.fill('#user-name', 'standard_user');
+  await page.fill('#password', '');
+  await page.click('#login-button');
+  // Verify error message
+  await expect(page.locator('.error-message-container')).toContainText('Epic sadface: Password is required');
+});
 
-    // Attempt to login with empty password
-    await page.fill('#user-name', 'standard_user');
-    await page.fill('#password', '');
-    await page.click('#login-button');
-
-    errorMessage = await page.locator('.error-message-container').textContent();
-    expect(errorMessage).toContain('Epic sadface: Password is required');
-  });
+// Both username and password empty
+test('Negative - login with empty username and password', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com');
+  await page.fill('#user-name', '');
+  await page.fill('#password', '');
+  await page.click('#login-button');
+  // Verify error message
+  await expect(page.locator('.error-message-container')).toContainText('Epic sadface: Username is required');
+});

@@ -13,10 +13,12 @@ steps:
   - task: NodeTool@0
     inputs:
       versionSpec: '24.3.0'
-    displayName: 'Install Node.js'
+    displayName: 'Install Node.js 24.3.0'
  
-  #- script: npm install -g npm@10
-   # displayName: 'Downgrade npm to v10'
+  - script: |
+      node -v
+      npm -v
+    displayName: 'Show Node.js and npm versions'
   
   - script: npm cache clean --force
     displayName: 'Clean npm cache'
@@ -26,11 +28,6 @@ steps:
       del package-lock.json
     displayName: 'Remove node_modules and package-lock.json'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-      
-  - script: node -v
-    displayName: 'Show Node.js version'
-  - script: npm -v
-    displayName: 'Show npm version'
 
   - script: |
       npm ci
