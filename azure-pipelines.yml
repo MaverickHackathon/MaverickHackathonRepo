@@ -37,9 +37,9 @@ steps:
     displayName: 'Update npm to latest version'
     
   - script: |
-      npm ci
+     # npm ci
       npx playwright install
-    displayName: 'Install dependencies and Playwright browsers'
+    displayName: 'Install Playwright'
 
   - script: |
       $datetime = Get-Date -Format "yyyyMMdd-HHmmss"
