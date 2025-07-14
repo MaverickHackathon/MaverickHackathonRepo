@@ -30,10 +30,13 @@ steps:
     displayName: 'Remove node_modules and package-lock.json'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
 
-  - script: |
-      npm ci
-      npx playwright install --with-deps
-    displayName: 'Install dependencies and Playwright browsers'
+  - script: npm ci --install-strategy=hoisted
+    displayName: 'Install dependencies'
+    
+ # - script: |
+  #    npm ci
+   #   npx playwright install --with-deps
+    #displayName: 'Install dependencies and Playwright browsers'
 
   - script: |
       $datetime = Get-Date -Format "yyyyMMdd-HHmmss"
