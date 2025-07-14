@@ -30,7 +30,7 @@ steps:
    # displayName: 'Remove node_modules and package-lock.json'
     #condition: eq( variables['Agent.OS'], 'Windows_NT' )
 
-  - script: npm ci
+  - script: npm ci --install-strategy hoisted
     displayName: 'Install dependencies'
 
  # - script: npm install -g npm@latest
@@ -41,7 +41,7 @@ steps:
     #npm install -g playwright
     #npm init playwright@latest
   - script: |      
-      npm playwright install
+      npx playwright install --with-deps
     displayName: 'Install Playwright'
     
 
