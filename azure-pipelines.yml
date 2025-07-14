@@ -3,7 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-
 trigger:
   - main
 
@@ -13,11 +12,25 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '18.x'
-    displayName: 'Install Node.js'
+      versionSpec: '24.3.0'
+    displayName: 'Install Node.js 24.3.0'
+ 
+  - script: |
+      node -v
+      npm -v
+    displayName: 'Show Node.js and npm versions'
+  
+  - script: |
+      npm cache clean --force
+    displayName: 'Clean npm cache'
 
   - script: |
-      npm install -g npm@latest
+      rd /s /q node_modules
+      del package-lock.json
+    displayName: 'Remove node_modules and package-lock.json'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  - script: |
       npm ci
       npx playwright install --with-deps
     displayName: 'Install dependencies and Playwright browsers'
@@ -28,6 +41,7 @@ steps:
       npx playwright test tests/saucedemologin.spec.js --reporter=junit --output=test-results
       Rename-Item -Path "test-results/results.xml" -NewName $filename
     displayName: 'Run Playwright tests and save JUnit report with build number and datetime'
+    shell: pwsh
 
   - task: PublishTestResults@2
     inputs:
