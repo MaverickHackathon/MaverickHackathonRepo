@@ -35,7 +35,7 @@ steps:
     
   - script: |
       npm ci
-      npx playwright install --with-deps
+      npx playwright install
     displayName: 'Install dependencies and Playwright browsers'
 
   - script: |
